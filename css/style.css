@@ -1,0 +1,67 @@
+.caixa-mensagens{
+    position: relative;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.mensagem-sucesso {
+    border: 2px solid #28a745;
+    background-color: lightgreen;
+    font-weight: bold;
+}
+
+
+.mensagem-erro {
+    border: 2px solid #dc3545;
+    background-color: lightcoral;
+    font-weight: bold;
+}
+
+.mensagem-sucesso a {
+    color: #28a745;
+    cursor: pointer;
+}
+
+.mensagem-sucesso a:hover {
+    color: #28a745;
+}
+
+.mensagem-erro a {
+    color: #dc3545;
+    cursor: pointer;
+}
+
+.mensagem-erro a:hover {
+    color: #dc3545;
+}
+
+.fechar-mensagem {
+    position: absolute;
+    right: 10px !important;
+    top: 10px !important;
+}
+
+.caixa {
+    position: relative;
+    padding: 30px;
+}
+.acoes {
+    position: absolute;
+    top: 0 !important;
+    right: 0 !important;
+}
+.acao-opcoes a:hover {
+    color: slategray !important;
+
+}
+.acoes a:hover {
+    color: slategray !important;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
+}

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="js/angular.min.js"></script>
+    <script src="js/FormBuilderController.js"></script>
+    
+    <link rel="stylesheet" href="css/fontawesome-all.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <title>Form Builder</title>
+    
+</head>
+<body ng-app="formBuilderApp">
+    <div class="container" ng-controller="FormBuilderController">
+        <br>
+        
+        <h1 class="text-center">Form Builder</h1>
+        
+        <br>
+
+        <!-- INÍCIO SEÇÃO DE MENSAGENS -->
+        <section>
+            <div class="caixa-mensagens mensagem-sucesso text-success"
+                ng-show="sucesso">
+                Campo adicionado com sucesso!
+                <a class="fechar-mensagem" ng-click="sucesso = false"><i class="fas fa-times"></i></a> 
+            </div>
+
+            <div class="caixa-mensagens mensagem-erro text-danger"
+                ng-show="erroRotuloCampo">
+                Rótulo do campo precisa ser preenchido!
+                <a class="fechar-mensagem" ng-click="erroRotuloCampo = false"><i class="fas fa-times"></i></a>
+            </div>
+
+            <div class="caixa-mensagens mensagem-erro text-danger"
+                ng-show="erroTipoCampo">
+                Tipo do campo precisa ser preenchido!
+                <a class="fechar-mensagem" ng-click="erroTipoCampo = false"><i class="fas fa-times"></i></a>
+            </div>
+
+            <div class="caixa-mensagens mensagem-erro text-danger"
+                ng-show="erroOpcoesCampo">
+                Campos dos tipos: Lista suspensa, Seleção Múltipla e Radio precisam de pelo menos uma opção definida!
+                <a class="fechar-mensagem" ng-click="erroOpcoesCampo = false"><i class="fas fa-times"></i></a>
+            </div>
+
+            <div class="caixa-mensagens mensagem-erro text-danger"
+                ng-show="erroOpcaoVazia">
+                Existe um ou mais campos de Opção que precisam ser preenchidos!
+                <a class="fechar-mensagem" ng-click="erroOpcaoVazia = false"><i class="fas fa-times"></i></a>
+            </div>
+        </section>
+        <!-- FIM SEÇÃO DE MENSÁGENS -->
+
+        <!-- INÍCIO SEÇÃO DE FORMULÁRIO PARA INSERÇÃO DE CAMPOS -->
+        <section class="caixa bg-light">
+            <form>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="rotuloCampo">Rótulo do campo:</label>
+                        <input type="text" id="rotuloCampo" ng-model="novoCampo.ROTULO_CAMPO"
+                        class="form-control" Placeholder="Digite o rótulo do campo" />
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        <label for="tipoCampo">Tipo do campo:</label>
+                        <select id="tipoCampo" ng-model="novoCampo.TIPO_CAMPO" 
+                        class="form-control">
+                            <option selected disabled value="">Tipo do campo</option>
+                            <option value="header">Título</option>
+                            <option value="subheader">Subtítulo</option>
+                            <option value="text">Campo de Texto</option>
+                            <option value="textarea">Campo de Parágrafo</option>
+                            <option value="select">Lista Suspensa</option>
+                            <option value="multiple">Seleção Múltipla</option>
+                            <option value="checkbox">Caixa de seleção</option>
+                            <option value="radio">Radio</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        <label for="posicaoCampo">Posição do campo:</label>
+                        <input type="number" id="posicaoCampo" ng-model="novoCampo.POSICAO_CAMPO"
+                        class="form-control" Placeholder="Digite um número" />
+                    </div>
+
+                    <div class="form-group col-md-6" ng-show="mostrarInstrucao()" >
+                        <label for="instrucaoCampo">Instruções do campo:</label>
+                        <input type="text" id="instrucaoCampo" ng-model="novoCampo.INSTRUCAO_CAMPO"
+                        class="form-control" Placeholder="Digite as instruções do campo" />
+                    </div>
+                    
+                    <div class="form-group col-md-3" ng-show="mostrarObrigatorio()">
+                        <label for="campoObrigatorio">Campo obtigatório? <input type="checkbox" id="campoObrigatorio" ng-model="novoCampo.CAMPO_OBRIGATORIO" ng-checked="novoCampo.CAMPO_OBRIGATORIO !== undefined"  />
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <ng-switch on="mudouTipoCampo(novoCampo.TIPO_CAMPO)" class="col-md-6">
+                        <div ng-switch-when="multiple">
+                            <a class="btn btn-primary float-left text-white" ng-click="adicionarOpcao()">Adicionar Opção</a>
+                            <div class="clearfix"></div>
+
+                            <div class="acao-opcoes" ng-repeat="opcao in novoCampo.OPCOES">
+                                <br>
+
+                                <input type="text" ng-model="opcao.VALOR_OPCAO"
+                                class="form-control col-md-11 float-left" placeholder="Digite o valor da opção" />
+                                <a class="btn btn-link float-right text-black" ng-click="remover(opcao, novoCampo.OPCOES)"><i class="fas fa-trash-alt"></i></a>
+                                
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </ng-switch>
+                </div>
+            </form>
+
+            <br>
+            <a class="btn btn-primary float-right text-white" ng-click="salvarCampo()" href="#">Salvar Campo</a>
+            <div class="clearfix"></div>
+        </section>
+        <!-- FIM SEÇÃO DE FORMULÁRIO PARA INSERÇÃO DE CAMPOS -->
+
+        <br>
+        
+        <!-- INÍCIO SEÇÃO DE FORMULÁRIO CRIADO DINAMICAMENTE -->
+        <section>
+            <div ng-repeat="campo in campos | orderBy:'POSICAO_CAMPO'" class="row">
+                <ng-switch on="campo.TIPO_CAMPO" class="col-md-12">
+                    
+                    <div class="form-group caixa bg-light" ng-switch-when="header">
+                        <div class="acoes float-right">
+                            <a class="btn btn-link text-black excluir-campo" ng-click="editarCampo(campo)"><i class="fas fa-pencil-alt"></i></a>
+                            <a class="btn btn-link text-black excluir-campo" ng-click="remover(campo, campos)"><i class="fas fa-trash-alt"></i></a>
+                        </div>
+                        <h1 class="text-center clearfix">{{campo.ROTULO_CAMPO}}</h1>
+                    </div>
+
+                    <div class="form-group caixa bg-light" ng-switch-when="subheader">
+                        <div class="acoes float-right">
+                            <a class="btn btn-link text-black excluir-campo" ng-click="editarCampo(campo)"><i class="fas fa-pencil-alt"></i></a>
+                            <a class="btn btn-link text-black excluir-campo" ng-click="remover(campo, campos)"><i class="fas fa-trash-alt"></i></a>
+                        </div>
+                        <h3 class="text-left clearfix">{{campo.ROTULO_CAMPO}}</h3>
+                    </div>
+
+                    <div class="form-group caixa bg-light" ng-switch-when="text">
+                        <div class="acoes float-right">
+                            <a class="btn btn-link text-black excluir-campo" ng-click="editarCampo(campo)"><i class="fas fa-pencil-alt"></i></a>
+                            <a class="btn btn-link text-black excluir-campo" ng-click="remover(campo, campos)"><i class="fas fa-trash-alt"></i></a>
+                        </div>
+                        <label class="clearfix">{{campo.ROTULO_CAMPO}}<span ng-show="campo.CAMPO_OBRIGATORIO == true">*</span></label>
+                        <input type="text" class="form-control" Placeholder="{{campo.INSTRUCAO_CAMPO}}" />
+                    </div>
+
+                    <div class="form-group caixa bg-light" ng-switch-when="textarea">
+                        <div class="acoes float-right">
+                            <a class="btn btn-link text-black excluir-campo" ng-click="editarCampo(campo)"><i class="fas fa-pencil-alt"></i></a>
+                            <a class="btn btn-link text-black excluir-campo" ng-click="remover(campo, campos)"><i class="fas fa-trash-alt"></i></a>
+                        </div>                        
+                        <label class="clearfix">{{campo.ROTULO_CAMPO}}<span ng-show="campo.CAMPO_OBRIGATORIO == true">*</span></label>
+                        <textarea type="text" class="form-control" Placeholder="{{campo.INSTRUCAO_CAMPO}}" rows="7"></textarea>
+                    </div>
+
+                    <div class="form-group caixa bg-light" ng-switch-when="select">
+                        <div class="acoes float-right">
+                            <a class="btn btn-link text-black excluir-campo" ng-click="editarCampo(campo)"><i class="fas fa-pencil-alt"></i></a>
+                            <a class="btn btn-link text-black excluir-campo" ng-click="remover(campo, campos)"><i class="fas fa-trash-alt"></i></a>
+                        </div>
+                        <label class="clearfix">{{campo.ROTULO_CAMPO}}<span ng-show="campo.CAMPO_OBRIGATORIO == true">*</span></label>
+                        <select class="form-control">
+                            <option selected disabled value="" ng-show="campo.INSTRUCAO_CAMPO != undefined && campo.INSTRUCAO_CAMPO != null ">{{campo.INSTRUCAO_CAMPO}}</option>
+                            <option ng-repeat="opcao in campo.OPCOES"> {{opcao.VALOR_OPCAO}}</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group caixa bg-light" ng-switch-when="multiple">
+                        <div class="acoes float-right">
+                            <a class="btn btn-link text-black excluir-campo" ng-click="editarCampo(campo)"><i class="fas fa-pencil-alt"></i></a>
+                            <a class="btn btn-link text-black excluir-campo" ng-click="remover(campo, campos)"><i class="fas fa-trash-alt"></i></a>
+                        </div>
+                        <label class="clearfix">{{campo.ROTULO_CAMPO}}<span ng-show="campo.CAMPO_OBRIGATORIO == true">*</span></label>
+                        <select class="form-control" multiple>
+                            <option selected disabled value="" ng-show="campo.INSTRUCAO_CAMPO != undefined && campo.INSTRUCAO_CAMPO != null ">{{campo.INSTRUCAO_CAMPO}}</option>
+                            <option ng-repeat="opcao in campo.OPCOES"> {{opcao.VALOR_OPCAO}}</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group caixa bg-light" ng-switch-when="radio">
+                        <div class="acoes float-right">
+                            <a class="btn btn-link text-black excluir-campo" ng-click="editarCampo(campo)"><i class="fas fa-pencil-alt"></i></a>
+                            <a class="btn btn-link text-black excluir-campo" ng-click="remover(campo, campos)"><i class="fas fa-trash-alt"></i></a>
+                        </div>
+                        <label class="clearfix">{{campo.ROTULO_CAMPO}}<span ng-show="campo.CAMPO_OBRIGATORIO == true">*</span></label>
+                        <div class="form-check" ng-repeat="opcao in campo.OPCOES">
+                            <label class="form-check-label">
+                                <input type="radio" name="{{campo.ROTULO_CAMPO}}" class="form-check-input" 
+                                value="{{opcao.VALOR_OPCAO}}" /> {{opcao.VALOR_OPCAO}}</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group caixa bg-light" ng-switch-when="checkbox">
+                        <div class="acoes float-right">
+                            <a class="btn btn-link text-black excluir-campo" ng-click="editarCampo(campo)"><i class="fas fa-pencil-alt"></i></a>
+                            <a class="btn btn-link text-black excluir-campo" ng-click="remover(campo, campos)"><i class="fas fa-trash-alt"></i></a>
+                        </div>
+                        <label class="clearfix">{{campo.ROTULO_CAMPO}}<span ng-show="campo.CAMPO_OBRIGATORIO == true">*</span></label>
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label">
+                                <input type="checkbox" name="{{campo.ROTULO_CAMPO}}" class="form-check-input" 
+                                value="{{opcao.VALOR_OPCAO}}" /> {{opcao.VALOR_OPCAO}}
+                            </label>
+                        </div>
+                    </div>
+
+                </ng-switch>
+            </div ng-repeat>
+        </section>
+        <!-- FIM SEÇÃO DE FORMULÁRIO CRIADO DINAMICAMENTE -->
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</body>
+</html>
