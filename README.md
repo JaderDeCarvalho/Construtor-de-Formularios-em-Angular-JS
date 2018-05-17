@@ -68,7 +68,11 @@ NOME | FUNCIONALIDADE
 `mostrarObrigatorio()` | Método responsável por definir se a opção de obrigatoriedade será renderizada na tela. Os tipos de campo *Título* e *Subtítulo* não podem ser obrigatórios
 `mostrarInstrucao` | Método responsável por definir se a opção de definição de Instrução do campo será renderizada na tela. Os tipos de campo *Título, Subtítulo, Seleção Múltipla, Radio e Caixa de seleção* não possuem opção de Instrução
 
+## Considerações Finais
 
+Como dito anteriormente, esse projeto consiste apenas na parte de criação dinâmica do formulário em tela, portanto não possui back-end nem foi definida conexão alguma com nenhum endpoint. Porém a ideia é exatamente essa, disponibilizar agora esse projeto que consiste basicamente em traçar uma solução para geração dinâmica de formulários e conseguir criar um tipo de estrutura flexível para objetos/itens gerados dinamicamente. Mais tarde bastaria pegar o conteúdo da variável `$scope.campos` e consumir um serviço REST enviando esse conteúdo como JSON, sendo assim basicamente essa variável é "o mais proximo de back-end" que esse projeto terá.
+
+Porém, a intenção é utilizar a solução desse projeto posteriormente e adicionar algumas coisas para consumir serviços REST que serão criados utilizando C# web API, Java e NodeJS e serão postados em repositórios separados aqui.
 
 
 
