@@ -14,14 +14,14 @@ Com isso basta copiar a estrutura do projeto para o disposítivo e abrir o arqui
 Esse projeto apresenta a seguinte estrutura:
 ```
 css
--- bootstrap.css
--- fontawesome-all.css
--- style.css
+  - bootstrap.css
+  - fontawesome-all.css
+  - style.css
 js
--- angular.min.js
--- bootstrap.min.js
--- FormBuilderController.js
-index.html
+  - angular.min.js
+  - bootstrap.min.js
+  - FormBuilderController.js
+- index.html
 ```
 OBS: A pasta *webfonts* contém os arquivos de fontes necessários para o uso dos ícones do projeto, por esse motivo seu conteúdo foi deliberadamente ocultado
 
